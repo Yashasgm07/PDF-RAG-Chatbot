@@ -1,140 +1,153 @@
 # 📄 PDF Chatbot using RAG (GenAI Project)
 
-## 🚀 Overview
-This project is a **GenAI-powered PDF chatbot** that allows users to upload multiple documents and ask questions using **Retrieval-Augmented Generation (RAG)**.
-
-It extracts text from PDFs, converts them into embeddings, stores them in a vector database (FAISS), and uses an LLM (via Groq API) to generate accurate, context-aware responses.
+🚀 A production-ready multi-document AI chatbot that enables intelligent querying over PDFs using Retrieval-Augmented Generation (RAG), FAISS vector search, and Groq-powered LLMs.
 
 ---
 
-## 🧠 Key Features
+## 💡 Why This Project?
 
-- 📂 Upload and process multiple PDFs
-- 🔍 Semantic search using FAISS vector database
+Traditional chatbots cannot handle large documents effectively.
+
+This project solves that by combining:
+- Semantic search (FAISS)
+- Context grounding (RAG)
+- Fast inference (Groq LLM)
+
+👉 Result: Accurate, fast, and scalable document intelligence system.
+
+---
+
+## 🧠 Features
+
+- 📂 Multi-PDF upload
+- 🔍 Semantic search using FAISS
 - ⚡ Fast responses using Groq (LLaMA 3.1)
-- 🧠 Context-aware answers using RAG pipeline
-- 📚 Source attribution (shows where answer came from)
-- 💬 Chat interface (ChatGPT-style UI)
-- 🧹 Clear chat functionality
-- 📥 Download chat history
-- 🔄 Persistent vector database (no reprocessing needed)
+- 🧠 Context-aware answers using RAG
+- 📚 Source attribution
+- 💬 ChatGPT-style UI
+- 🧹 Clear chat
+- 📥 Download chat
+- 🔄 Persistent vector DB
 
 ---
 
 ## ⚙️ Tech Stack
 
-- **Python**
-- **LangChain**
-- **FAISS (Vector Database)**
-- **HuggingFace Embeddings**
-- **Groq API (LLaMA 3.1)**
-- **Streamlit (Frontend UI)**
+- Python  
+- LangChain  
+- FAISS  
+- HuggingFace Embeddings  
+- Groq API (LLaMA 3.1)  
+- Streamlit  
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ Architecture
 
+PDF Upload → Text Extraction → Chunking → Embeddings  
+→ FAISS Vector Store → Retrieval → LLM (Groq) → Answer  
 
-User Query
-↓
-FAISS Vector Search (Top-K Retrieval)
-↓
-Relevant Document Chunks
-↓
-LLM (Groq - LLaMA 3.1)
-↓
-Context-aware Answer
+---
 
+## 🧪 Example Queries
+
+- "Summarize all documents"
+- "Compare both PDFs"
+- "What skills are mentioned?"
+- "Find key responsibilities"
+
+---
+
+## ⚡ Performance Highlights
+
+- ⚡ Fast inference using Groq
+- 📚 Handles multiple PDFs
+- 🎯 Improved accuracy with Top-K retrieval
+- 🧠 Reduced hallucination via prompt engineering
 
 ---
 
 ## 📂 Project Structure
 
+app/
+- main.py (UI)
+- pdf_processor.py
+- vector_store.py
+- rag_pipeline.py
 
-PDF_RAG_Chatbot/
-│── app/
-│ ├── main.py # Streamlit UI
-│ ├── pdf_processor.py # PDF parsing + chunking
-│ ├── vector_store.py # FAISS DB creation/loading
-│ ├── rag_pipeline.py # RAG logic + LLM integration
-│
-│── data/
-│ ├── raw/ # Uploaded PDFs
-│ ├── db/ # Saved vector DB
-│
-│── config/
-│ └── settings.py # Configs (model, chunk size)
-│
-│── .env # API keys (not pushed)
-│── requirements.txt
-│── README.md
+data/
+- raw/ (PDFs)
+- db/ (vector store)
 
-
----
-
-## 🧪 How It Works
-
-1. Upload PDFs from the sidebar  
-2. Text is extracted and split into chunks  
-3. Chunks are converted into embeddings  
-4. Stored in FAISS vector database  
-5. User asks a question  
-6. Relevant chunks are retrieved  
-7. LLM generates answer based on context  
+config/
+- settings.py
 
 ---
 
 ## 🖥️ Run Locally
 
-### 1. Clone Repository
+### Clone Repo
 
-```bash
-git clone https://github.com/YOUR_USERNAME/PDF-RAG-Chatbot.git
-cd PDF-RAG-Chatbot
-2. Create Virtual Environment
-python -m venv venv
-venv\Scripts\activate   # Windows
-3. Install Dependencies
-pip install -r requirements.txt
-4. Add Environment Variables
+git clone https://github.com/Yashasgm07/PDF-RAG-Chatbot.git  
+cd PDF-RAG-Chatbot  
 
-Create a .env file in root:
+### Install
 
-GROQ_API_KEY=your_api_key_here
-5. Run Application
-streamlit run app/main.py
-📸 Demo
+pip install -r requirements.txt  
 
-Add screenshots here (UI, chat, multi-PDF upload)
+### Add API Key
 
-🚧 Challenges & Improvements
-Challenges Faced
-Handling multi-document retrieval
-Preventing LLM hallucinations
-Optimizing response speed
-Designing clean UI for usability
-Improvements Made
-Increased retrieval depth (Top-K tuning)
-Structured context formatting
-Strong prompt engineering
-Multi-document reasoning support
-🎯 Future Enhancements
-🔄 Conversation memory (context-aware chat)
-⚡ Streaming responses (typing effect)
-🌐 Cloud deployment
-📊 Document insights & analytics
-🧾 Support for more file types (DOCX, TXT)
-🧠 Key Learnings
-Deep understanding of RAG architecture
-Practical use of vector databases (FAISS)
-Prompt engineering for LLM grounding
-Handling real-world multi-document QA systems
-Building end-to-end GenAI applications
-📌 Resume Description
+Create `.env` file:
 
-Developed a multi-document PDF chatbot using Retrieval-Augmented Generation (RAG) with FAISS-based vector search and HuggingFace embeddings. Integrated Groq’s LLaMA 3.1 for fast, context-aware responses and built a Streamlit-based chat interface with source attribution and export functionality.
+GROQ_API_KEY=your_key_here  
 
-👨‍💻 Author
+### Run
 
-Yashas G M
+streamlit run app/main.py  
+
+---
+
+## 🚧 Challenges & Improvements
+
+### Challenges
+- Multi-document retrieval
+- Preventing hallucinations
+- UI design
+- Speed optimization
+
+### Improvements
+- Increased Top-K retrieval
+- Structured context formatting
+- Strong prompt engineering
+- Multi-doc reasoning
+
+---
+
+## 🎯 Future Work
+
+- Conversation memory  
+- Streaming responses  
+- Cloud deployment  
+- Support more file types  
+
+---
+
+## 🧠 Key Learnings
+
+- RAG architecture
+- Vector databases (FAISS)
+- Prompt engineering
+- Multi-document QA systems
+
+---
+
+## 📌 Resume Line
+
+Developed a multi-document PDF chatbot using Retrieval-Augmented Generation (RAG) with FAISS and Groq LLaMA 3.1, enabling fast, context-aware querying with a Streamlit UI.
+
+---
+
+## 👨‍💻 Author
+
+Yashas G M  
 GitHub: https://github.com/Yashasgm07
