@@ -1,5 +1,6 @@
 import sys
 import os
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import streamlit as st
@@ -11,6 +12,12 @@ from app.rag_pipeline import build_qa_system
 # Page Config
 # -----------------------------
 st.set_page_config(page_title="PDF Chatbot", layout="wide")
+
+# -----------------------------
+# Ensure folders exist (🔥 FIX FOR DEPLOYMENT)
+# -----------------------------
+os.makedirs("data/raw", exist_ok=True)
+os.makedirs("data/db", exist_ok=True)
 
 # -----------------------------
 # Custom Styling
@@ -66,7 +73,7 @@ if st.session_state.db is None:
         st.success("✅ Loaded existing vector database")
 
 # -----------------------------
-# Sidebar
+# Sidebar Upload
 # -----------------------------
 with st.sidebar:
     st.header("📂 Upload Documents")
@@ -84,11 +91,14 @@ with st.sidebar:
             for file in uploaded_files:
                 file_path = f"data/raw/{file.name}"
 
+                # Save file
                 with open(file_path, "wb") as f:
                     f.write(file.getbuffer())
 
+                # Process PDF
                 chunks = process_pdf(file_path)
 
+                # Add source metadata
                 for chunk in chunks:
                     chunk.metadata["source"] = file.name
 
@@ -97,11 +107,12 @@ with st.sidebar:
         st.success("✅ PDFs processed")
         st.write(f"📄 Total chunks: {len(all_chunks)}")
 
+        # Create DB
         db = create_vector_db(all_chunks)
         st.session_state.db = db
         st.session_state.qa_system = build_qa_system(db)
 
-    # 🔥 Clear Chat Button
+    # Clear chat
     if st.button("🧹 Clear Chat"):
         st.session_state.messages = []
         st.success("Chat cleared!")
@@ -120,13 +131,15 @@ query = st.chat_input("Ask something about your PDFs...")
 # -----------------------------
 # Handle Query
 # -----------------------------
-if query and st.session_state.qa_system:
+if query:
+    if not st.session_state.qa_system:
+        st.warning("⚠️ Please upload at least one PDF first.")
+    else:
+        with st.spinner("🤖 Thinking..."):
+            answer = st.session_state.qa_system(query)
 
-    with st.spinner("🤖 Thinking..."):
-        answer = st.session_state.qa_system(query)
-
-    st.session_state.messages.append(("user", query))
-    st.session_state.messages.append(("bot", answer))
+        st.session_state.messages.append(("user", query))
+        st.session_state.messages.append(("bot", answer))
 
 # -----------------------------
 # Chat Display
@@ -146,15 +159,16 @@ for role, msg in st.session_state.messages:
         """, unsafe_allow_html=True)
 
 # -----------------------------
-# Show Sources
+# Show Sources (Latest Query)
 # -----------------------------
 if query and st.session_state.db:
-    docs = st.session_state.db.similarity_search(query, k=2)
+    docs = st.session_state.db.similarity_search(query, k=3)
 
     with st.expander("📚 Sources"):
         for i, doc in enumerate(docs):
-            st.write(f"**Source:** {doc.metadata.get('source','Unknown')}")
+            st.markdown(f"**📄 Source:** {doc.metadata.get('source','Unknown')}")
             st.write(doc.page_content[:200])
+            st.divider()
 
 # -----------------------------
 # Download Chat
